@@ -1,5 +1,7 @@
                                                                                                                                   package main;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 import data.Bank;
@@ -9,7 +11,7 @@ public class ATM {
 
 	private static Scanner input ;
 	
-	
+	private static String loginAccount;
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -82,6 +84,7 @@ public class ATM {
     		System.out.println("Invalid Account Number/PIN");
     		welcome();
     	} else {
+    		loginAccount = accountNumberInput;
     		transactionmenu();
     	}
     	
@@ -124,13 +127,13 @@ public class ATM {
 		
 		switch (money) {
 		case "1": //$10
-	
+			withdraw(10);
 			break;
 		case "2"://$50
-	
+			withdraw(50);
 			break;
 		case "3"://$100
-			
+			withdraw(100);
 			break;
 		case "4"://other withdraw
 			break;
@@ -143,7 +146,20 @@ public class ATM {
 		
 		
 	}
+
 	
+	private static void withdraw(double money) {
+
+		if(Bank.getBank().getAccount(loginAccount).getBalance() >= money) {
+			Bank.getBank().getAccount(loginAccount).setBalance(Bank.getBank().getAccount(loginAccount).getBalance()-money);
+		}else {
+			System.out.println("Insufficient balance" + "$" + money);
+			return;
+		}
+		System.out.println("Withdraw successful");
+		summary(money);
+	}
+		
 	private static void otherwithdrawmenu() {
 		
 		
@@ -222,15 +238,44 @@ public class ATM {
 
 	}
 	
-
+	*/
 
 	
-	private static void summary() {
+	private static void summary(Double withdrawnMoney) {
+		LocalDateTime now = LocalDateTime.now();
 
-		System.out.println("your balance is");
+        System.out.println("Before : " + now);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        String formatDateTime = now.format(formatter);
+
+                
+		System.out.println("=======");
+		System.out.println("Summary");
+		System.out.println("=======");
+		System.out.println("Date: " + formatDateTime);
+		System.out.println("Withdraw: " + "$" + withdrawnMoney);
+		System.out.println("Balance: " + "$" + Bank.getBank().getAccount(loginAccount).getBalance());
+		System.out.println();
+		System.out.println("1. Transaction");
+		System.out.println("2. Exit");
+		
+		System.out.print("Please choose option [2] :");
+		
+		String option = input.nextLine();
+		
+		switch (option) {
+		case "1"://Transaction
+			transactionmenu();
+			break;
+		case "2"://exit
+			break;
+		default :
+			welcome();
+		}
 	}
 	
-	*/
+	
 }
 
