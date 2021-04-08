@@ -65,7 +65,7 @@ public class ATM {
 	    while (true) {
     		System.out.println("Enter PIN:");
     	    pinInput = input.nextLine(); 
-    	    
+    	       	    
     	    if(pinInput.length() != 6) {
     	    	System.out.println("PIN should have 6 digits length");
     	    	continue;
@@ -107,6 +107,7 @@ public class ATM {
 			withdrawmenu();
 			break;
 		case "2"://Fund Transfer
+			fundtransfermenu();
 			break;
 		case "3"://exit
 			break;
@@ -116,48 +117,84 @@ public class ATM {
 	}
 	
 	private static void withdrawmenu() {
-		System.out.println("1. $10");
-		System.out.println("2. $50");
-		System.out.println("3. $100");
-		System.out.println("4. Other");
-		System.out.println("5. Back");
 		
-		System.out.print("Please choose option[5]:");
-		String money = input.nextLine();
-		
-		switch (money) {
-		case "1": //$10
-			withdraw(10);
+		while(true)
+		{
+			System.out.println("1. $10");
+			System.out.println("2. $50");
+			System.out.println("3. $100");
+			System.out.println("4. Other");
+			System.out.println("5. Back");
+			
+			System.out.print("Please choose option[5]:");
+			String money = input.nextLine();
+			
+			switch (money) {
+			case "1": //$10
+				if(checkMoney(10)) {
+					withdraw(Double.valueOf(10));
+				} else {
+					continue;
+				}
+				break;
+			case "2"://$50
+				if(checkMoney(50)) {
+					withdraw(Double.valueOf(10));
+				}  else {
+					continue;
+				}
+				break;
+			case "3"://$100
+				if(checkMoney(100)) {
+					withdraw(Double.valueOf(10));
+				} else {
+					continue;
+				}
+				break;
+			case "4"://other withdraw
+				otherwithdrawmenu();
+				break;
+			case "5"://back
+				transactionmenu();
+				break;
+			default://exit
+				transactionmenu();
+			}
+			
 			break;
-		case "2"://$50
-			withdraw(50);
-			break;
-		case "3"://$100
-			withdraw(100);
-			break;
-		case "4"://other withdraw
-			break;
-		case "5"://back
-			transactionmenu();
-			break;
-		default://drop out 
-			transactionmenu();
 		}
+
 		
 		
 	}
 
+
 	
 	private static void withdraw(double money) {
 
-		if(Bank.getBank().getAccount(loginAccount).getBalance() >= money) {
-			Bank.getBank().getAccount(loginAccount).setBalance(Bank.getBank().getAccount(loginAccount).getBalance()-money);
-		}else {
-			System.out.println("Insufficient balance" + "$" + money);
-			return;
-		}
+		Bank.getBank().getAccount(loginAccount).setBalance(Bank.getBank().getAccount(loginAccount).getBalance()-money);
 		System.out.println("Withdraw successful");
 		summary(money);
+	
+	}
+	
+	private static boolean checkMoney(double money) {
+
+		Double balance = Bank.getBank().getAccount(loginAccount).getBalance();
+		if(money > 1000) {
+			System.out.println("Maximum amount to withdraw is $1000");
+			return false;
+		}
+		
+		if(balance >= money) {
+			return true;
+		} else {
+			System.out.println("Insufficient balance" + "$" + balance);
+			return false;
+		}
+		
+
+
 	}
 		
 	private static void otherwithdrawmenu() {
@@ -174,21 +211,24 @@ public class ATM {
 		    	if (!money.chars().allMatch(Character::isDigit)) {
 		    		System.out.println("Invalid ammount");
 		    		continue;
+		    	} 
+		    	
+		    	if(checkMoney(Double.parseDouble(money)))
+		    	{
+					withdraw(Double.parseDouble(money));
+		    		break;
+		    	} else {
+		    		continue;
 		    	}
 		    	
-		    	
-		    	break;
 		    	
 		 }
 		 
 
 		
-
-		
-		
 	}
 	
-	/*
+	
 	
 	private static void fundtransfermenu() {
 		
@@ -217,16 +257,15 @@ public class ATM {
 	    		System.out.println("Please enter transfer amount and \r\n"
 	    				+ "press enter to continue or \r\n"
 	    				+ "press enter to go back to Transaction:");
-	    	    String accountInput = input.nextLine();
+	    	    String amountInput = input.nextLine();
 	    	    
 	    	    
-		    	if (!accountInput.chars().allMatch(Character::isDigit)) {
-		    		System.out.println("Invalid Account");
+		    	if (!amountInput.chars().allMatch(Character::isDigit)) {
+		    		System.out.println("Invalid Amount");
 		    		continue;
 		    	}
 		    	
-		    	if (Bank.getBank().getAccount(accountInput) == null) {
-		    		System.out.println("Invalid Account");
+		    	if (checkMoney(Double.parseDouble(amountInput))) {
 		    		continue;
 		    	}
 		    	
@@ -236,15 +275,19 @@ public class ATM {
 		 }
 		 
 
+
+ 		System.out.println("Reference Number:");
+ 		System.out.println("Press enter to continue:");
+ 		input.nextLine();
+
+			
+
+		 transactionmenu();
 	}
 	
-	*/
 
-	
 	private static void summary(Double withdrawnMoney) {
 		LocalDateTime now = LocalDateTime.now();
-
-        System.out.println("Before : " + now);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
