@@ -229,35 +229,82 @@ public class ATM {
 	}
 	
 	
+	private static void fundTransfer(String destinationAccount, double money, String referenceNo) {
+
+		Bank.getBank().getAccount(loginAccount).setBalance(Bank.getBank().getAccount(loginAccount).getBalance()-money);
+		System.out.println("Withdraw successful");
+		fundSummary(destinationAccount, money, referenceNo);
+	
+	}
+	
+	private static void fundSummary(String destinationAccount, double money, String referenceNo) {
+		System.out.println("=====================");
+		System.out.println("Fund Transfer Summary");
+		System.out.println("=====================");
+		System.out.println("Destination Account: " + destinationAccount);
+		System.out.println("Transfer Amount :" + money );
+		System.out.println("Reference Number :" + referenceNo);
+		System.out.println("Balance:" + "$" + Bank.getBank().getAccount(loginAccount).getBalance());
+		System.out.println();
+		System.out.println("1. Transaction");
+		System.out.println("2. Exit");
+		
+		System.out.print("Please choose option [2] :");
+		
+		String option = input.nextLine();
+		
+		switch (option) {
+		case "1"://Transaction
+			transactionmenu();
+			break;
+		case "2"://exit
+			break;
+		default :
+			welcome();
+		}
+	}
 	
 	private static void fundtransfermenu() {
 		
-		 while (true) {
-	    		System.out.println("Please enter destination account and press enter to continue or \r\n"
-	    				+ "press enter to go back to Transaction: ");
-	    	    String accountInput = input.nextLine();
-	    	    
-	    	    
-		    	if (!accountInput.chars().allMatch(Character::isDigit)) {
-		    		System.out.println("Invalid Account");
-		    		continue;
-		    	}
-		    	
-		    	if (Bank.getBank().getAccount(accountInput) == null) {
-		    		System.out.println("Invalid Account");
-		    		continue;
-		    	}
-		    	
-		    	
-		    	break;
-		    	
-		 }
+		String accountInput;
+		String amountInput;
+		
+		transfer:
+		while(true) {
+			fundTransfer1:
+			while (true) {
+		    		System.out.println("Please enter destination account and press enter to continue or \r\n"
+		    				+ "press enter to go back to Transaction: ");
+		    	    accountInput = input.nextLine();
+		    	    
+		    	    
+			    	if (accountInput.length() != 0 && !accountInput.chars().allMatch(Character::isDigit)) {
+			    		System.out.println("Invalid Account");
+			    		continue;
+			    	}
+			    	
+			    	if (Bank.getBank().getAccount(accountInput) == null) {
+			    		System.out.println("Invalid Account");
+			    		continue;
+			    	}
+			    	
+			    	
+			    	break;
+			    	
+			 }
 		 
+		}
+
+ 		System.out.println("Reference Number:");
+ 		System.out.println("Press enter to continue:");
+ 		input.nextLine();
+
+		
 		 while (true) {
 	    		System.out.println("Please enter transfer amount and \r\n"
 	    				+ "press enter to continue or \r\n"
 	    				+ "press enter to go back to Transaction:");
-	    	    String amountInput = input.nextLine();
+	    	    amountInput = input.nextLine();
 	    	    
 	    	    
 		    	if (!amountInput.chars().allMatch(Character::isDigit)) {
@@ -265,26 +312,49 @@ public class ATM {
 		    		continue;
 		    	}
 		    	
-		    	if (checkMoney(Double.parseDouble(amountInput))) {
+		    	if(checkMoney(Double.parseDouble(amountInput)))
+		    	{
+		    		fundTransfer(accountInput, Double.parseDouble(amountInput), "xxxx");
+		    		break;
+		    	} else {
+		    		continue;
+		    	}
+
+		    	
+		 }
+
+	}
+	
+	private static String fundtransfermenu1(String account) {
+		
+		String accountInput;
+		String amountInput;
+		
+		
+		 while (true) {
+	    		System.out.println("Please enter transfer amount and \r\n"
+	    				+ "press enter to continue or \r\n"
+	    				+ "press enter to go back to Transaction:");
+	    	    amountInput = input.nextLine();
+	    	    
+	    	    
+		    	if (!amountInput.chars().allMatch(Character::isDigit)) {
+		    		System.out.println("Invalid Amount");
 		    		continue;
 		    	}
 		    	
-		    	
-		    	break;
+		    	if(checkMoney(Double.parseDouble(amountInput)))
+		    	{
+		    		fundTransfer(accountInput, Double.parseDouble(amountInput), "xxxx");
+		    		break;
+		    	} else {
+		    		continue;
+		    	}
+
 		    	
 		 }
-		 
 
-
- 		System.out.println("Reference Number:");
- 		System.out.println("Press enter to continue:");
- 		input.nextLine();
-
-			
-
-		 transactionmenu();
 	}
-	
 
 	private static void summary(Double withdrawnMoney) {
 		LocalDateTime now = LocalDateTime.now();
