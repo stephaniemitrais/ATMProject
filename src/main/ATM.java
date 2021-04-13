@@ -271,12 +271,15 @@ public class ATM {
 		
 		transfer:
 		while(true) {
-			fundTransfer1:
 			while (true) {
 		    		System.out.println("Please enter destination account and press enter to continue or \r\n"
 		    				+ "press enter to go back to Transaction: ");
 		    	    accountInput = input.nextLine();
 		    	    
+		    	    
+		    	    if (accountInput.length() != 0) {
+		    	    	break transfer;
+		    	    }
 		    	    
 			    	if (accountInput.length() != 0 && !accountInput.chars().allMatch(Character::isDigit)) {
 			    		System.out.println("Invalid Account");
@@ -288,73 +291,43 @@ public class ATM {
 			    		continue;
 			    	}
 			    	
-			    	
 			    	break;
+			 }
+			
+			
+			 while (true) {
+		    		System.out.println("Please enter transfer amount and \r\n"
+		    				+ "press enter to continue or \r\n"
+		    				+ "press enter to go back to Transaction:");
+		    	    amountInput = input.nextLine();
+		    	    
+		    	    
+			    	if (!amountInput.chars().allMatch(Character::isDigit)) {
+			    		System.out.println("Invalid Amount");
+			    		continue;
+			    	}
+			    	
+			    	if(checkMoney(Double.parseDouble(amountInput)))
+			    	{
+			    		fundTransfer(accountInput, Double.parseDouble(amountInput), "xxxx");
+			    		break;
+			    	} else {
+			    		continue;
+			    	}
+
 			    	
 			 }
 		 
 		}
 
- 		System.out.println("Reference Number:");
- 		System.out.println("Press enter to continue:");
- 		input.nextLine();
-
+ 
 		
-		 while (true) {
-	    		System.out.println("Please enter transfer amount and \r\n"
-	    				+ "press enter to continue or \r\n"
-	    				+ "press enter to go back to Transaction:");
-	    	    amountInput = input.nextLine();
-	    	    
-	    	    
-		    	if (!amountInput.chars().allMatch(Character::isDigit)) {
-		    		System.out.println("Invalid Amount");
-		    		continue;
-		    	}
-		    	
-		    	if(checkMoney(Double.parseDouble(amountInput)))
-		    	{
-		    		fundTransfer(accountInput, Double.parseDouble(amountInput), "xxxx");
-		    		break;
-		    	} else {
-		    		continue;
-		    	}
-
-		    	
-		 }
+		 
+		 transactionmenu();
 
 	}
 	
-	private static String fundtransfermenu1(String account) {
-		
-		String accountInput;
-		String amountInput;
-		
-		
-		 while (true) {
-	    		System.out.println("Please enter transfer amount and \r\n"
-	    				+ "press enter to continue or \r\n"
-	    				+ "press enter to go back to Transaction:");
-	    	    amountInput = input.nextLine();
-	    	    
-	    	    
-		    	if (!amountInput.chars().allMatch(Character::isDigit)) {
-		    		System.out.println("Invalid Amount");
-		    		continue;
-		    	}
-		    	
-		    	if(checkMoney(Double.parseDouble(amountInput)))
-		    	{
-		    		fundTransfer(accountInput, Double.parseDouble(amountInput), "xxxx");
-		    		break;
-		    	} else {
-		    		continue;
-		    	}
-
-		    	
-		 }
-
-	}
+	
 
 	private static void summary(Double withdrawnMoney) {
 		LocalDateTime now = LocalDateTime.now();
