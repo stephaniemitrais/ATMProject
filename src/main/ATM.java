@@ -109,12 +109,7 @@ public class ATM {
 	    
 	
 	private static void transactionmenu() {
-		try {
-			Runtime.getRuntime().exec("cls");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 		
 		System.out.println("1. Withdraw");
 		System.out.println("2. Fund Transfer");
