@@ -1,6 +1,5 @@
                                                                                                                                   package main;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -109,7 +108,9 @@ public class ATM {
 	    
 	
 	private static void transactionmenu() {
-
+		System.out.println("================");
+	    System.out.println("Transaction Menu");
+	    System.out.println("================");
 		
 		System.out.println("1. Withdraw");
 		System.out.println("2. Fund Transfer");
@@ -136,6 +137,9 @@ public class ATM {
 		
 		while(true)
 		{
+			System.out.println("=========");
+		    System.out.println("Withdraw");
+		    System.out.println("=========");
 			System.out.println("1. $10");
 			System.out.println("2. $50");
 			System.out.println("3. $100");
@@ -175,9 +179,9 @@ public class ATM {
 				break;
 			default://exit
 				transactionmenu();
+				break;
 			}
-			
-			break;
+
 		}
 
 		
@@ -229,13 +233,19 @@ public class ATM {
 		    		continue;
 		    	} 
 		    	
-		    	if(checkMoney(Double.parseDouble(money)))
-		    	{
-					withdraw(Double.parseDouble(money));
-		    		break;
-		    	} else {
-		    		continue;
-		    	}
+				if(money.length() == 0) {
+					break;
+				} else {
+					
+					if(checkMoney(Double.parseDouble(money)))
+					{
+						withdraw(Double.parseDouble(money));
+						break;
+					} 
+				
+				}
+		    	
+		    	break;
 		    	
 		    	
 		 }
