@@ -1,5 +1,6 @@
                                                                                                                                   package main;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -36,65 +37,85 @@ public class ATM {
 	    System.out.println("Welcome to Mitrais Bank ATM");
 	    System.out.println("===========================");
 
-	    String accountNumberInput;
+	    String accountNumberInput = null;
 	    
-	    String pinInput;
+	    String pinInput = null;
 	    
+	    boolean isAccountValid = false;
 	    
-	    while (true) {
-		    System.out.println("Enter account number:");
-		    accountNumberInput = input.nextLine(); 
-		    
-
-		    if(accountNumberInput.length() != 6) {
-		    	System.out.println("Account Number should have 6 digits length");
-		    	continue;
-		    } 
-		    
-	    	if (!accountNumberInput.chars().allMatch(Character::isDigit)) {
-	    		System.out.println("Account Number should only contains numbers");
-	    		continue;
-	    	}
-	    		
-	    	break;
-	    	
+	    while (!isAccountValid) {
+	    	System.out.println("Enter account number:");
+    		accountNumberInput = input.nextLine(); 
+    		    
+    		isAccountValid = validateAccountNo(accountNumberInput);
+    	    		
+    	    
 	    }
 	    
+	    boolean isPINValid = false;
 	    
-	    
-	    while (true) {
+	    while (!isPINValid) {
     		System.out.println("Enter PIN:");
     	    pinInput = input.nextLine(); 
     	       	    
-    	    if(pinInput.length() != 6) {
-    	    	System.out.println("PIN should have 6 digits length");
-    	    	continue;
-    	    } 
-    	    if (!pinInput.chars().allMatch(Character::isDigit)) {
-    	    	System.out.println("PIN should only contains numbers");
-    	    	continue;
-    	    }
-	    	
-	    	break;
+    	    isPINValid = validatePIN(pinInput);
 	    	
 	    }
 	    
         
     	if (Bank.getBank().getAccount(accountNumberInput, pinInput) == null) {
     		System.out.println("Invalid Account Number/PIN");
-    		welcome();
+
+    		return;
+    		
     	} else {
     		loginAccount = accountNumberInput;
+    		
     		transactionmenu();
     	}
     	
+
 	    
 	}
  
-	      
+	public static boolean validateAccountNo(String accountNumberInput) {
+		
+	    if(accountNumberInput.length() != 6) {
+	    	System.out.println("Account Number should have 6 digits length");
+	    	return false;
+	    } 
+	    
+    	if (!accountNumberInput.chars().allMatch(Character::isDigit)) {
+    		System.out.println("Account Number should only contains numbers");
+    		return false;
+    	}
+ 	    return true;
+	}
+	    
+	
+	public static boolean validatePIN(String pinInput) {
+		
+		if(pinInput.length() != 6) {
+ 	    	System.out.println("PIN should have 6 digits length");
+ 	    	return false;
+ 	    } 
+ 	    if (!pinInput.chars().allMatch(Character::isDigit)) {
+ 	    	System.out.println("PIN should only contains numbers");
+ 	    	return false;
+ 	    }
+ 	    
+ 	    return true;
+	}
 	    
 	
 	private static void transactionmenu() {
+		try {
+			Runtime.getRuntime().exec("cls");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		System.out.println("1. Withdraw");
 		System.out.println("2. Fund Transfer");
 		System.out.println("3. Exit");
@@ -277,7 +298,7 @@ public class ATM {
 		    	    accountInput = input.nextLine();
 		    	    
 		    	    
-		    	    if (accountInput.length() != 0) {
+		    	    if (accountInput.length() == 0) {
 		    	    	break transfer;
 		    	    }
 		    	    
@@ -301,6 +322,9 @@ public class ATM {
 		    				+ "press enter to go back to Transaction:");
 		    	    amountInput = input.nextLine();
 		    	    
+		    	    if (amountInput.length() == 0) {
+		    	    	break transfer;
+		    	    }
 		    	    
 			    	if (!amountInput.chars().allMatch(Character::isDigit)) {
 			    		System.out.println("Invalid Amount");
@@ -309,7 +333,7 @@ public class ATM {
 			    	
 			    	if(checkMoney(Double.parseDouble(amountInput)))
 			    	{
-			    		fundTransfer(accountInput, Double.parseDouble(amountInput), "xxxx");
+			    		fundTransfer(accountInput, Double.parseDouble(amountInput), String.valueOf(System.currentTimeMillis()));
 			    		break;
 			    	} else {
 			    		continue;
