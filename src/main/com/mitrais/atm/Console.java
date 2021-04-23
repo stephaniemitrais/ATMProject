@@ -1,4 +1,4 @@
-package main;
+package com.mitrais.atm;
 
 import java.util.Scanner;
 

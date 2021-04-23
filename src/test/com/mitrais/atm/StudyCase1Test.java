@@ -1,6 +1,5 @@
-package test;
+package com.mitrais.atm;
 
-import main.ATM;
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
@@ -10,6 +9,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.mitrais.atm.ATM;
 
 
 public class StudyCase1Test {

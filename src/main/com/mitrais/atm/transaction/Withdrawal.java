@@ -1,9 +1,10 @@
-package data;
+package com.mitrais.atm.transaction;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import main.ATM;
+import com.mitrais.atm.ATM;
+import com.mitrais.atm.Session;
 
 public class Withdrawal extends Transaction {
 

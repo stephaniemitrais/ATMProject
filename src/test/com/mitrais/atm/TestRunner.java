@@ -1,4 +1,4 @@
-package test;
+package com.mitrais.atm;
 
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;

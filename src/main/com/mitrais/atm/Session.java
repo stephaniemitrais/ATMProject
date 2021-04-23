@@ -1,7 +1,7 @@
-package data;
+package com.mitrais.atm;
 
-import data.Transaction.Exit;
-import main.ATM;
+import com.mitrais.atm.transaction.Transaction;
+import com.mitrais.atm.transaction.Transaction.Exit;
 
 public class Session {
 	

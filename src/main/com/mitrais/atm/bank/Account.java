@@ -1,4 +1,4 @@
-package data;
+package com.mitrais.atm.bank;
 
 import java.util.Objects;
 

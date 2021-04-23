@@ -1,6 +1,7 @@
-package data;
+package com.mitrais.atm.transaction;
 
-import main.ATM;
+import com.mitrais.atm.ATM;
+import com.mitrais.atm.Session;
 
 
 public abstract class Transaction {

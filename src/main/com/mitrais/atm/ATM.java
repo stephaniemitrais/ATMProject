@@ -1,7 +1,6 @@
-                                                                                                                                  package main;
+                                                                                                                                  package com.mitrais.atm;
 
-import data.Bank;
-import data.Session;
+import com.mitrais.atm.bank.Bank;
 
 
 public class ATM {
