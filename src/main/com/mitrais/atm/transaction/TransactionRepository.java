@@ -1,6 +1,7 @@
 package com.mitrais.atm.transaction;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +17,18 @@ public class TransactionRepository {
 		List<Transaction> transactionList = transactions.stream()
 		.filter(trans -> loginUser.getAccountNo().equals(trans.getAccountNo()))
 		.limit(10)
+		.sorted(Comparator.comparingInt(Transaction::getId).reversed())
+		.collect(Collectors.toList());
+
+    	return transactionList;
+	}
+	
+	public List<Transaction> findLastTransactions(Login loginUser, int transactionNo) {
+		
+		List<Transaction> transactionList = transactions.stream()
+		.filter(trans -> loginUser.getAccountNo().equals(trans.getAccountNo()))
+		.limit(transactionNo)
+		.sorted(Comparator.comparingInt(Transaction::getId).reversed())
 		.collect(Collectors.toList());
 
     	return transactionList;

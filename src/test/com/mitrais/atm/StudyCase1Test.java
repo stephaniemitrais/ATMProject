@@ -22,7 +22,7 @@ public class StudyCase1Test {
 	
 	LoginService loginService;
 	
-	AccountRepository bank = new AccountRepository();
+	AccountRepository bank = new AccountRepository("src/source/Account.csv");
 	
 	@Before
 	public void setUp() {

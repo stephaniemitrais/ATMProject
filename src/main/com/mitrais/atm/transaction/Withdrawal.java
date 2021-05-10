@@ -111,7 +111,7 @@ public class Withdrawal extends Transaction {
 
 				String money = input.nextLine();
 	    	    
-				input.close();
+
 				
 				if(money.length() == 0) {
 					throw new Cancel();

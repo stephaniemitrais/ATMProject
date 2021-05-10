@@ -13,7 +13,13 @@ import java.util.stream.Collectors;
 
 public class AccountRepository {
 
-    private final List<Account> accounts = getAccounts();
+	
+	public AccountRepository(String filePath) {
+		this.filePath = filePath;
+		accounts = getAccounts();
+	}
+	private String filePath;
+    private static List<Account> accounts;
 
     /*
     List<Account> getAccounts() {
@@ -24,9 +30,10 @@ public class AccountRepository {
   
     private List<Account> getAccounts() {
     	
-        String filePath = "src/source/Account.csv";
+        String filePath = this.filePath;
         
         List<Account> accountList = new ArrayList<Account>();
+        
         
         try{
 
@@ -36,6 +43,7 @@ public class AccountRepository {
 
             accountList = br.lines().skip(1)
             		.map(mapToPerson).collect(Collectors.toList());
+            
             
             br.close();
             
@@ -53,8 +61,7 @@ public class AccountRepository {
 	  return new Account(p[0], p[3], p[1], Double.valueOf(p[2]));
 	};
     
-      
-    
+
     public Account getAccount(String accountNo, String password) {
 
     	Account account = accounts.stream()
@@ -89,7 +96,6 @@ public class AccountRepository {
 	}
 	
 	
-
 	
 		
 }

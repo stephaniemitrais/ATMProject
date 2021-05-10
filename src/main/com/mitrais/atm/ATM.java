@@ -1,5 +1,7 @@
                                                                                                                                   package com.mitrais.atm;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -20,7 +22,7 @@ public class ATM {
 	
 	private static Login loginUser;
 	
-	private static final AccountRepository bank = new AccountRepository();
+	private static final AccountRepository bank = new AccountRepository("src/source/Account.csv");
 	
 	private static final TransactionRepository transactionRepo = new TransactionRepository();
 	
@@ -208,7 +210,7 @@ public class ATM {
 				}
 				break;
 			case "3":
-				getTransactionsFromThisATM(loginUser);
+				printLastTransactions(loginUser);
 				
 				break;
 			case "4"://exit
@@ -222,12 +224,16 @@ public class ATM {
 	}
 	
 
-	private void getTransactionsFromThisATM(Login loginUser)        
+	private void printLastTransactions(Login loginUser)        
 	{
 		List<Transaction> transactions = transactionService.getLastTransactions(loginUser);
-		System.out.println("Transaction Name"+ " | "+ "Amount");
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy hh:mm:ss"); 
+		
+		System.out.println("Transaction Name"+ " | "+ "Amount" + " | " + "Transaction Date");
 		transactions.forEach(trans -> {
-		    System.out.println(trans.getTransactionName() + " | "+ trans.getTransactionAmount());
+		    System.out.println(trans.getTransactionName() + " | "+ trans.getTransactionAmount() + " | "
+		    		+  dateFormat.format(trans.getTransactionDate()));
 		});
 		
 		System.out.println("Balance: " + transactionService.getBalance(loginUser.getAccountNo()));
