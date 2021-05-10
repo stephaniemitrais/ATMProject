@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class Bank {
+public class AccountRepository {
 
     private final List<Account> accounts = getAccounts();
 
@@ -22,7 +22,7 @@ public class Bank {
     }
     */
   
-    List<Account> getAccounts() {
+    private List<Account> getAccounts() {
     	
         String filePath = "src/source/Account.csv";
         
@@ -48,7 +48,7 @@ public class Bank {
     
 
 
-	public static Function<String, Account> mapToPerson = (line) -> {
+	private static Function<String, Account> mapToPerson = (line) -> {
 	  String[] p = line.split(";");
 	  return new Account(p[0], p[3], p[1], Double.valueOf(p[2]));
 	};
@@ -75,27 +75,21 @@ public class Bank {
     	return account;
     }
     
-    /*
-    public Account getAccount(String accountNo, String password) {
 
-    	for (Account account : accounts) {
-    	    if (account.getAccountNo().equals(accountNo) && account.getPassword().equals(password)) {
-    	         return account;
-    	    }
-    	}
-    	
-    	return null;
-    }
-    
-    public Account getAccount(String accountNo) {
+	public void setBalance(String accountNo, double balance) {
 
-    	for (Account account : accounts) {
-    	    if (account.getAccountNo().equals(accountNo)) {
-    	         return account;
-    	    }
-    	}
-    	
-    	return null;
-    }
-    */
+		getAccount(accountNo).setBalance(balance);
+	}
+	
+	public double getBalance(String accountNo) {
+
+		double balance = getAccount(accountNo).getBalance();
+		
+		return balance;
+	}
+	
+	
+
+	
+		
 }

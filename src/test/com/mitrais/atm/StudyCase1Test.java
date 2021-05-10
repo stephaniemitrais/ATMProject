@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.mitrais.atm.ATM;
+import com.mitrais.atm.bank.AccountRepository;
 
 
 public class StudyCase1Test {
@@ -19,18 +20,20 @@ public class StudyCase1Test {
 	private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
 	private final PrintStream standardOut = System.out;
 	
-	ATM atm;
+	LoginService loginService;
+	
+	AccountRepository bank = new AccountRepository();
 	
 	@Before
 	public void setUp() {
 	    System.setOut(new PrintStream(outputStreamCaptor));
-	    atm = new ATM();
+	    loginService = new LoginService(bank);
 	}
 	
 	@Test
 	public void testLoginValidAcccountNo_length() {
 		
-		boolean accountIsValid = atm.validateAccountNo("11");
+		boolean accountIsValid = loginService.validateAccountNo("11");
 	    Assert.assertEquals("Account Number should have 6 digits length", outputStreamCaptor.toString()
 	    	      .trim());
 	    
@@ -41,7 +44,7 @@ public class StudyCase1Test {
 	@Test
 	public void testLoginValidAcccountNo_number() {
 		
-		boolean accountIsValid = atm.validateAccountNo("abc");
+		boolean accountIsValid = loginService.validateAccountNo("abc");
 	    Assert.assertEquals("Account Number should only contains numbers", outputStreamCaptor.toString()
 	    	      .trim());
 	    
@@ -51,7 +54,7 @@ public class StudyCase1Test {
 	@Test
 	public void testLoginValidPIN_length() {
 		
-		boolean accountIsValid = atm.validatePIN("1237");
+		boolean accountIsValid = loginService.validatePIN("1237");
 	    Assert.assertEquals("PIN should have 6 digits length", outputStreamCaptor.toString()
 	    	      .trim());
 	    
@@ -60,7 +63,7 @@ public class StudyCase1Test {
 	
 	public void testLoginValidPIN_number() {
 		
-		boolean accountIsValid = atm.validatePIN("abcd");
+		boolean accountIsValid = loginService.validatePIN("abcd");
 	    Assert.assertEquals("PIN should only contains numbers", outputStreamCaptor.toString()
 	    	      .trim());
 	    
@@ -71,7 +74,7 @@ public class StudyCase1Test {
 	@After
 	public void tearDown() {
 	    System.setOut(standardOut);
-	    atm = null;
+	    loginService = null;
 	}
 
 }

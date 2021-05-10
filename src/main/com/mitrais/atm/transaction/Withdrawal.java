@@ -2,28 +2,38 @@ package com.mitrais.atm.transaction;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 
 import com.mitrais.atm.ATM;
-import com.mitrais.atm.Session;
+import com.mitrais.atm.Login;
 
 public class Withdrawal extends Transaction {
 
-    public Withdrawal(Session session, ATM atm) {
-		super(session, atm);
+    public Withdrawal(Login loginUser, ATM atm) {
+		super(loginUser, atm);
 		// TODO Auto-generated constructor stub
 	}
 
 
 	@Override
-	protected String getTransactionName() {
+	public String getTransactionName() {
 		return "withdraw";
 	}
 
 	
-    private double withdrawnAmount;
+    @Override
+	public double getTransactionAmount() {
+		// TODO Auto-generated method stub
+		return this.withdrawnAmount;
+	}
 
+
+	private double withdrawnAmount;
+
+	private static Scanner input = new Scanner(System.in);  
+	
 	@Override
-	public void performTransaction() throws Exit {
+	public void performTransaction() throws Cancel {
 
 		boolean amountIsValid = false;
 		
@@ -39,21 +49,24 @@ public class Withdrawal extends Transaction {
 			System.out.println("5. Back");
 			
 			System.out.print("Please choose option[5]:");
-			String money = atm.getConsole().getStringInput();
+			
+
+			
+			String money = input.nextLine();
 			
 			switch (money) {
 			case "1": //$10
-				amountIsValid = checkMoney(10, getTransactionName(), 1000);
+				amountIsValid = atm.getTransactionService().checkMoney(super.accountNo, 10, getTransactionName(), 1000);
 				withdrawnAmount = Double.valueOf(10);
 				break;
 				
 			case "2"://$50
-				amountIsValid = checkMoney(10, getTransactionName(), 1000);
+				amountIsValid = atm.getTransactionService().checkMoney(super.accountNo, 10, getTransactionName(), 1000);
 				withdrawnAmount = Double.valueOf(50);
 				break;
 				
 			case "3"://$100
-				amountIsValid = checkMoney(10, getTransactionName(), 1000);
+				amountIsValid = atm.getTransactionService().checkMoney(super.accountNo, 10, getTransactionName(), 1000);
 				withdrawnAmount = Double.valueOf(100);
 				break;
 				
@@ -61,46 +74,34 @@ public class Withdrawal extends Transaction {
 				double amount = 0;
 				try {
 					amount = otherWithdrawnAmount();
-					amountIsValid = checkMoney(amount, getTransactionName(), 1000);
+					amountIsValid = atm.getTransactionService().checkMoney(super.accountNo, amount, getTransactionName(), 1000);
 					withdrawnAmount = amount;
 					
 					
-				} catch (Cancelled e) {
+				} catch (Cancel e) {
 		
 				}
 
 				break;
 				
 			case "5"://back
-				throw new Exit();
+				throw new Cancel();
 				
 			default://exit
-				throw new Exit();
+				throw new Cancel();
 			}
 			
 		}
 		
-		withdraw(withdrawnAmount);
+		atm.getTransactionService().withdraw(this, super.accountNo, withdrawnAmount);
 
 		summary(withdrawnAmount);
 		
 	}
 	
 
-	private void withdraw(double money) throws Exit {
-
-		reduceBalance(money);
 		
-		System.out.println("Withdraw successful");
-
-	
-	}
-	
-	
-
-		
-	private Double otherWithdrawnAmount() throws Cancelled {
-		
+	private Double otherWithdrawnAmount() throws Cancel {
 		
 		 while (true) {
 				System.out.println("==============");
@@ -108,10 +109,12 @@ public class Withdrawal extends Transaction {
 				System.out.println("==============");
 				System.out.println("Enter amount to withdraw:");
 
-				String money = atm.getConsole().getStringInput();
+				String money = input.nextLine();
 	    	    
+				input.close();
+				
 				if(money.length() == 0) {
-					throw new Cancelled();
+					throw new Cancel();
 				}
 				
 		    	if (!money.chars().allMatch(Character::isDigit)) {
@@ -129,7 +132,7 @@ public class Withdrawal extends Transaction {
 	}
 	
 	
-	private void summary(Double withdrawnMoney) throws Exit {
+	private void summary(Double withdrawnMoney) throws Cancel {
 		LocalDateTime now = LocalDateTime.now();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -142,16 +145,9 @@ public class Withdrawal extends Transaction {
 		System.out.println("=======");
 		System.out.println("Date: " + formatDateTime);
 		System.out.println("Withdraw: " + "$" + withdrawnMoney);
-		System.out.println("Balance: " + "$" + getBalance());
+		System.out.println("Balance: " + "$" + atm.getTransactionService().getBalance(super.accountNo));
 
 	}
 	
-	public static class Cancelled extends Exception
-    {
-        public Cancelled()
-        {
-            super("Cancelled");
-        }
-    }
 	
 }

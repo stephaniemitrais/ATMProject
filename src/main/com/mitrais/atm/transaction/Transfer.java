@@ -1,46 +1,59 @@
 package com.mitrais.atm.transaction;
 
+import java.util.Scanner;
+
 import com.mitrais.atm.ATM;
-import com.mitrais.atm.Session;
+import com.mitrais.atm.Login;
 
 public class Transfer extends Transaction {
-    public Transfer(Session session, ATM atm)
-    {
-        super(session, atm);
-    }
-
+	
+    public Transfer(Login loginUser, ATM atm) {
+		super(loginUser, atm);
+		// TODO Auto-generated constructor stub
+	}
+    
 	@Override
-	protected String getTransactionName() {
+	public String getTransactionName() {
 		return "transfer";
 	}
 
+    @Override
+	public double getTransactionAmount() {
+		return transferredAmount;
+	}
+
+    private double transferredAmount;
+    
+	private static Scanner input = new Scanner(System.in);  
+	
 	@Override
-	public void performTransaction() throws Exit {
+	public void performTransaction() throws Cancel {
 		
 
-		String accountInput;
+		String destinationAccountInput;
 		String amountInput = null;
 		
 		boolean transferIsProcessed = false;
+		
 		
 		transfer:
 		while(true) {
 			while (true) {
 		    		System.out.println("Please enter destination account and press enter to continue or \r\n"
 		    				+ "press enter to go back to Transaction: ");
-		    	    accountInput = atm.getConsole().getStringInput();
+		    	    destinationAccountInput = input.nextLine();
 		    	    
 		    	    
-		    	    if (accountInput.length() == 0) {
+		    	    if (destinationAccountInput.length() == 0) {
 		    	    	break transfer;
 		    	    }
 		    	    
-			    	if (accountInput.length() != 0 && !accountInput.chars().allMatch(Character::isDigit)) {
+			    	if (destinationAccountInput.length() != 0 && !destinationAccountInput.chars().allMatch(Character::isDigit)) {
 			    		System.out.println("Invalid Account");
 			    		continue;
 			    	}
 			    	
-			    	if (atm.getBank().getAccount(accountInput) == null) {
+			    	if (!atm.getTransactionService().destinationAccountIsValid(super.accountNo)) {
 			    		System.out.println("Invalid Account");
 			    		continue;
 			    	}
@@ -52,7 +65,7 @@ public class Transfer extends Transaction {
 			 while (true) {
 		    		System.out.println("Please enter transfer amount and press enter to continue \r\n"
 		    				+ "or press enter to go back to Transaction:");
-		    	    amountInput = atm.getConsole().getStringInput();
+		    	    amountInput = input.nextLine();
 		    	    
 		    	    if (amountInput.length() == 0) {
 		    	    	break transfer;
@@ -63,7 +76,7 @@ public class Transfer extends Transaction {
 			    		continue;
 			    	}
 			    	
-			    	if(checkMoney(Double.valueOf(amountInput), getTransactionName(), 1000))
+			    	if(atm.getTransactionService().checkMoney(super.accountNo,Double.valueOf(amountInput), getTransactionName(), 1000))
 			    	{
 			    		transferIsProcessed = true;
 			    		break transfer;
@@ -77,12 +90,15 @@ public class Transfer extends Transaction {
 		 
 		}
 		
+		
 		if(transferIsProcessed) {
-			fundTransfer(accountInput, Double.parseDouble(amountInput), String.valueOf(System.currentTimeMillis()));
+			this.transferredAmount = Double.valueOf(amountInput);
+			atm.getTransactionService().fundTransfer(this, super.accountNo, destinationAccountInput, Double.parseDouble(amountInput));
+			summary(destinationAccountInput, Double.valueOf(amountInput), String.valueOf(System.currentTimeMillis()));
 			
 		} else {
 			
-			throw new Exit();
+			throw new Cancel();
 		}
 
 	
@@ -92,14 +108,6 @@ public class Transfer extends Transaction {
 	
 
 	
-
-	private void fundTransfer(String destinationAccount, double money, String referenceNo) {
-		reduceBalance(money);
-		System.out.println("Transfer successful");
-		summary(destinationAccount, money, referenceNo);
-	
-	}
-	
 	private void summary(String destinationAccount, double money, String referenceNo) {
 		System.out.println("=====================");
 		System.out.println("Fund Transfer Summary");
@@ -107,7 +115,7 @@ public class Transfer extends Transaction {
 		System.out.println("Destination Account: " + destinationAccount);
 		System.out.println("Transfer Amount :" + money );
 		System.out.println("Reference Number :" + referenceNo);
-		System.out.println("Balance:" + "$" + getBalance());
+		System.out.println("Balance:" + "$" + atm.getTransactionService().getBalance(super.accountNo));
 		
 	}
 	
