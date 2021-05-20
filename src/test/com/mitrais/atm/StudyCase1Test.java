@@ -1,7 +1,5 @@
 package com.mitrais.atm;
 
-import static org.junit.Assert.*;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
@@ -10,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.mitrais.atm.ATM;
 import com.mitrais.atm.bank.AccountRepository;
 
 

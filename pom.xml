@@ -13,9 +13,18 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
         <configuration>
-          <release>15</release>
+            <source>1.8</source>
+            <target>1.8</target>
         </configuration>
       </plugin>
     </plugins>
   </build>
+  <dependencies>
+  	<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  		<version>4.13.2</version>
+  		<scope>test</scope>
+  	</dependency>
+  </dependencies>
 </project>
